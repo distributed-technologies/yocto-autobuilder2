@@ -25,6 +25,7 @@ buildertorepos = {
     "check-layer": ["poky", "meta-mingw", "meta-gplv2"],
     "check-layer-nightly": ["poky", "meta-agl", "meta-arm", "meta-aws", "meta-intel", "meta-openembedded", "meta-virtualization", "meta-ti", "meta-security"],
     "docs": ["yocto-docs", "bitbake"],
+    "mukube": ["mukube", "poky", "meta-virtualization", "meta-openembedded", "meta-security", "meta-selinux"],
     "default": ["poky"]
 }
 
@@ -32,28 +33,30 @@ buildertorepos = {
 # user customisable
 repos = {
     "yocto-autobuilder-helper":
-        ["git://git.yoctoproject.org/yocto-autobuilder-helper",
-         "master"],
+    ["https://github.com/distributed-technologies/yocto-autobuilder-helper.git",
+         "main"],
     "eclipse-poky-neon": ["git://git.yoctoproject.org/eclipse-yocto",
                           "neon-master"],
     "eclipse-poky-oxygen": ["git://git.yoctoproject.org/eclipse-yocto",
                             "oxygen-master"],
-    "poky": ["git://git.yoctoproject.org/poky", "master"],
-    "meta-intel": ["git://git.yoctoproject.org/meta-intel", "master"],
+    "poky": ["git://git.yoctoproject.org/poky", "hardknott"],
+    "mukube": ["https://github.com/distributed-technologies/mukube.git", "feature/yocto-switch"],
+    "meta-security": ["https://git.yoctoproject.org/cgit/cgit.cgi/meta-security/", "hardknott"],
+    "meta-selinux": ["https://git.yoctoproject.org/cgit/cgit.cgi/meta-selinux/", "hardknott"],
+    "meta-intel": ["git://git.yoctoproject.org/meta-intel", "hardknott"],
     "meta-arm": ["git://git.yoctoproject.org/meta-arm", "master"],
     "meta-agl": ["https://git.automotivelinux.org/AGL/meta-agl", "next"],
     "meta-aws": ["https://github.com/aws/meta-aws.git", "master"],
     "meta-ti": ["git://git.yoctoproject.org/meta-ti", "master"],
-    "meta-security": ["git://git.yoctoproject.org/meta-security", "master"],
-    "oecore": ["git://git.openembedded.org/openembedded-core",
-                          "master"],
+    "meta-security": ["git://git.yoctoproject.org/meta-security", "hardknott"],
+    "oecore": ["git://git.openembedded.org/openembedded-core", "hardknott"],
     "bitbake": ["git://git.openembedded.org/bitbake", "master"],
     "meta-qt4": ["git://git.yoctoproject.org/meta-qt4", "master"],
     "meta-qt3": ["git://git.yoctoproject.org/meta-qt3", "master"],
     "meta-mingw": ["git://git.yoctoproject.org/meta-mingw", "master"],
     "meta-gplv2": ["git://git.yoctoproject.org/meta-gplv2", "master"],
-    "meta-openembedded": ["git://git.openembedded.org/meta-openembedded", "master"],
-    "meta-virtualization": ["git://git.yoctoproject.org/meta-virtualization", "master"],
+    "meta-openembedded": ["git://git.openembedded.org/meta-openembedded", "hardknott"],
+    "meta-virtualization": ["git://git.yoctoproject.org/meta-virtualization", "hardknott"],
     "yocto-docs": ["git://git.yoctoproject.org/yocto-docs", "master"]
 }
 
@@ -108,11 +111,13 @@ trigger_builders_wait_perf = ["buildperf-ubuntu1604", "buildperf-centos7"]
 
 # Builders which are individually triggered
 builders_others = [
-    "meta-oe", "meta-virt",
+    "meta-oe", 
+    "meta-virt",
     "bringup",
     "qemuarm-armhost",
     "check-layer-nightly",
-    "auh"
+    "auh",
+    "mukube",
 ]
 
 subbuilders = list(set(trigger_builders_wait_quick + trigger_builders_wait_full + trigger_builders_wait_perf + builders_others))
@@ -120,20 +125,20 @@ builders = ["a-quick", "a-full", "docs"] + subbuilders
 
 # ## Cluster configuration
 # Publishing settings
-sharedrepodir = "/srv/autobuilder/repos"
-publish_dest = "/srv/autobuilder/autobuilder.yoctoproject.org/pub"
+sharedrepodir = "/home/pokybuild3/repos"
+publish_dest = "/home/pokybuild3/publish"
 
 # Web UI settings
-web_port = 8010
+web_port = 8080
 
 # List of workers in the cluster
 workers_ubuntu = ["ubuntu2004-ty-1", "ubuntu2004-ty-2", "ubuntu1804-ty-1", "ubuntu1804-ty-2", "ubuntu1804-ty-3", "ubuntu1604-ty-1"]
-workers_centos = ["centos7-ty-1", "centos7-ty-2", "centos7-ty-3", "centos7-ty-4", "centos8-ty-1", "centos8-ty-2"]
+workers_centos = ["centos7-ty-1", "centos7-ty-2", "centos7-ty-3", "centos7-ty-4", "centos8-ty-1"]
 workers_fedora = ["fedora29-ty-1", "fedora30-ty-1", "fedora30-ty-2"]
 workers_debian = ["debian8-ty-1", "debian9-ty-2", "debian10-ty-1", "debian10-ty-2", "debian10-ty-3"]
 workers_opensuse = ["tumbleweed-ty-1", "tumbleweed-ty-2", "tumbleweed-ty-3", "opensuse151-ty-1", "opensuse150-ty-1"]
 
-workers = workers_ubuntu + workers_centos + workers_fedora + workers_debian + workers_opensuse 
+workers = workers_ubuntu + workers_centos + workers_fedora + workers_debian + workers_opensuse + ["example-worker"]
 
 workers_bringup = []
 # workers with wine on them for meta-mingw
@@ -141,7 +146,7 @@ workers_wine = ["ubuntu1804-ty-1", "ubuntu1804-ty-2", "ubuntu1804-ty-3"]
 workers_buildperf = ["perf-ubuntu1604", "perf-centos7"]
 workers_arm = ["ubuntu1804-arm-1"]
 # workers which don't need buildtools for AUH
-workers_auh = ["ubuntu1904-ty-1", "ubuntu1804-ty-1", "ubuntu1804-ty-2", "ubuntu1804-ty-3", "centos8-ty-1", "centos8-ty-2", "debian10-ty-1", "debian10-ty-2", "debian10-ty-3"]
+workers_auh = ["ubuntu1804-ty-1", "ubuntu1804-ty-2", "ubuntu1804-ty-3", "centos8-ty-1", "debian10-ty-1", "debian10-ty-2", "debian10-ty-3"]
 
 all_workers = workers + workers_bringup + workers_buildperf + workers_arm
 
