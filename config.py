@@ -61,37 +61,28 @@ repos = {
 }
 
 trigger_builders_wait_shared = [
-    "qemuarm", "qemuarm-alt", "qemuarm64", "qemuarm-oecore",
-    "qemumips", "qemumips64",
-    "multilib",
-    "qemuppc",
     "qemux86", "qemux86-alt",
     "qemux86-64", "qemux86-64-alt",
     "qemux86-64-x32", "qemux86-world",
-    "edgerouter",
     "genericx86", "genericx86-alt",
     "genericx86-64", "genericx86-64-alt",
-    "beaglebone", "beaglebone-alt",
-    "pkgman-non-rpm",
-    "pkgman-rpm-non-rpm", "pkgman-deb-non-deb",
     "build-appliance", "buildtools",
     "non-gpl3", "wic",
-    "poky-tiny", "musl-qemux86", "musl-qemux86-64", "no-x11",
-    "qa-extras", "qa-extras2",
-    "check-layer", "meta-mingw",
-    "qemuarm64-armhost"
+    "poky-tiny", 
+    "qa-extras", 
+    "qa-extras2",
+    "check-layer",
+    "mukube",
 ]
 
 trigger_builders_wait_quick = trigger_builders_wait_shared + [
-    "oe-selftest", "reproducible", "qemux86-64-ptest-fast", "qemuarm64-ptest-fast"
+    "oe-selftest", "reproducible"
 ]
 
 trigger_builders_wait_full = trigger_builders_wait_shared + [
-    "qemumips-alt", "edgerouter-alt", "qemuppc-alt", "qemux86-world-alt",
-    "oe-selftest-ubuntu", "oe-selftest-debian", "oe-selftest-fedora", "oe-selftest-centos",
-    "reproducible-ubuntu", "reproducible-debian", "reproducible-fedora", "reproducible-centos",
-    "qemux86-64-ptest", "qemux86-64-ltp", "qemuarm64-ptest", "qemuarm64-ltp", 
-    "meta-intel", "meta-arm", "meta-aws", "meta-agl-core"
+    "qemux86-world-alt",
+    "qemux86-64-ptest", "qemux86-64-ltp",
+    "meta-intel", "meta-aws", "meta-agl-core"
 ]
 
 trigger_builders_wait_quick_releases = {
@@ -107,7 +98,7 @@ trigger_builders_wait_full_releases = {
                                              "oe-selftest-ubuntu", "oe-selftest-debian", "oe-selftest-centos"]
 }
 
-trigger_builders_wait_perf = ["buildperf-ubuntu1604", "buildperf-centos7"]
+trigger_builders_wait_perf = []
 
 # Builders which are individually triggered
 builders_others = [
@@ -132,21 +123,16 @@ publish_dest = "/home/pokybuild3/publish"
 web_port = 8080
 
 # List of workers in the cluster
-workers_ubuntu = ["ubuntu2004-ty-1", "ubuntu2004-ty-2", "ubuntu1804-ty-1", "ubuntu1804-ty-2", "ubuntu1804-ty-3", "ubuntu1604-ty-1"]
-workers_centos = ["centos7-ty-1", "centos7-ty-2", "centos7-ty-3", "centos7-ty-4", "centos8-ty-1"]
-workers_fedora = ["fedora29-ty-1", "fedora30-ty-1", "fedora30-ty-2"]
-workers_debian = ["debian8-ty-1", "debian9-ty-2", "debian10-ty-1", "debian10-ty-2", "debian10-ty-3"]
-workers_opensuse = ["tumbleweed-ty-1", "tumbleweed-ty-2", "tumbleweed-ty-3", "opensuse151-ty-1", "opensuse150-ty-1"]
 
-workers = workers_ubuntu + workers_centos + workers_fedora + workers_debian + workers_opensuse + ["example-worker", "worker"]
+workers = ["worker"]
 
 workers_bringup = []
 # workers with wine on them for meta-mingw
-workers_wine = ["ubuntu1804-ty-1", "ubuntu1804-ty-2", "ubuntu1804-ty-3"]
-workers_buildperf = ["perf-ubuntu1604", "perf-centos7"]
-workers_arm = ["ubuntu1804-arm-1"]
+workers_wine = []
+workers_buildperf = []
+workers_arm = []
 # workers which don't need buildtools for AUH
-workers_auh = ["ubuntu1804-ty-1", "ubuntu1804-ty-2", "ubuntu1804-ty-3", "centos8-ty-1", "debian10-ty-1", "debian10-ty-2", "debian10-ty-3"]
+workers_auh = []
 
 all_workers = workers + workers_bringup + workers_buildperf + workers_arm
 
@@ -169,27 +155,5 @@ notify_on_missing = None
 
 # Some builders should only run on specific workers (host OS dependent)
 builder_to_workers = {
-    "bringup": workers_bringup,
-    "pkgman-rpm-non-rpm": workers_ubuntu + workers_debian,
-    "pkgman-deb-non-deb": workers_fedora + workers_centos + workers_opensuse,
-    "oe-selftest-ubuntu": workers_ubuntu,
-    "oe-selftest-debian": workers_debian,
-    "oe-selftest-fedora": workers_fedora,
-    "oe-selftest-opensuse": workers_opensuse,
-    "oe-selftest-centos": workers_centos,
-    "reproducible-ubuntu": workers_ubuntu,
-    "reproducible-debian": workers_debian,
-    "reproducible-fedora": workers_fedora,
-    "reproducible-opensuse": workers_opensuse,
-    "reproducible-centos": workers_centos,
-    "meta-mingw": workers_wine,
-    "buildperf-ubuntu1604": ["perf-ubuntu1604"],
-    "buildperf-centos7": ["perf-centos7"],
-    "qemuarm-armhost": workers_arm,
-    "qemuarm64-ptest": workers_arm,
-    "qemuarm64-ptest-fast": workers_arm,
-    "qemuarm64-ltp": workers_arm,
-    "qemuarm64-armhost": workers_arm,
-    "auh" : workers_auh,
     "default": workers
 }
