@@ -138,7 +138,7 @@ workers_fedora = ["fedora29-ty-1", "fedora30-ty-1", "fedora30-ty-2"]
 workers_debian = ["debian8-ty-1", "debian9-ty-2", "debian10-ty-1", "debian10-ty-2", "debian10-ty-3"]
 workers_opensuse = ["tumbleweed-ty-1", "tumbleweed-ty-2", "tumbleweed-ty-3", "opensuse151-ty-1", "opensuse150-ty-1"]
 
-workers = workers_ubuntu + workers_centos + workers_fedora + workers_debian + workers_opensuse + ["example-worker"]
+workers = workers_ubuntu + workers_centos + workers_fedora + workers_debian + workers_opensuse + ["example-worker", "worker"]
 
 workers_bringup = []
 # workers with wine on them for meta-mingw
